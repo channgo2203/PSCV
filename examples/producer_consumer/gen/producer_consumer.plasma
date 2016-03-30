@@ -1,0 +1,56 @@
+﻿<?xml version="1.0"?>
+    <PlasmaProject name="producer_consumer">
+        <models>
+            <model name="producer_consumer_model" type="systemc">
+                <content>/home/channgo/Tools/pscv/examples/producer_consumer/ins/producer_consumer</content>
+            </model>
+        </models>
+        <requirements>
+            <requirement name="latency_14" type="bltl">
+                <content>G &lt;= #2000 ((c_read = 38) =&gt; (F &lt;= #14 (c_read = 64))) </content>
+            </requirement>
+            <requirement name="latency_14" type="bltl">
+                <content>G &lt;= #4000 ((c_read = 38) =&gt; (F &lt;= #14 (c_read = 64))) </content>
+            </requirement>
+            <requirement name="latency_14" type="bltl">
+                <content>G &lt;= #6000 ((c_read = 38) =&gt; (F &lt;= #14 (c_read = 64))) </content>
+            </requirement>
+            <requirement name="latency_14" type="bltl">
+                <content>G &lt;= #8000 ((c_read = 38) =&gt; (F &lt;= #14 (c_read = 64))) </content>
+            </requirement>
+            <requirement name="latency_14" type="bltl">
+                <content>G &lt;= #10000 ((c_read = 38) =&gt; (F &lt;= #14 (c_read = 64))) </content>
+            </requirement>
+            <requirement name="latency_16" type="bltl">
+                <content>G &lt;= #2000 ((c_read = 38) =&gt; (F &lt;= #16 (c_read = 64))) </content>
+            </requirement>
+            <requirement name="latency_16" type="bltl">
+                <content>G &lt;= #4000 ((c_read = 38) =&gt; (F &lt;= #16 (c_read = 64))) </content>
+            </requirement>
+            <requirement name="latency_16" type="bltl">
+                <content>G &lt;= #6000 ((c_read = 38) =&gt; (F &lt;= #16 (c_read = 64))) </content>
+            </requirement>
+            <requirement name="latency_16" type="bltl">
+                <content>G &lt;= #8000 ((c_read = 38) =&gt; (F &lt;= #16 (c_read = 64))) </content>
+            </requirement>
+            <requirement name="latency_16" type="bltl">
+                <content>G &lt;= #10000 ((c_read = 38) =&gt; (F &lt;= #16 (c_read = 64))) </content>
+            </requirement>
+            <requirement name="latency_18" type="bltl">
+                <content>G &lt;= #2000 ((c_read = 38) =&gt; (F &lt;= #18 (c_read = 64))) </content>
+            </requirement>
+            <requirement name="latency_18" type="bltl">
+                <content>G &lt;= #4000 ((c_read = 38) =&gt; (F &lt;= #18 (c_read = 64))) </content>
+            </requirement>
+            <requirement name="latency_18" type="bltl">
+                <content>G &lt;= #6000 ((c_read = 38) =&gt; (F &lt;= #18 (c_read = 64))) </content>
+            </requirement>
+            <requirement name="latency_18" type="bltl">
+                <content>G &lt;= #8000 ((c_read = 38) =&gt; (F &lt;= #18 (c_read = 64))) </content>
+            </requirement>
+            <requirement name="latency_18" type="bltl">
+                <content>G &lt;= #10000 ((c_read = 38) =&gt; (F &lt;= #18 (c_read = 64))) </content>
+            </requirement>
+        </requirements>
+        <resources/>
+    </PlasmaProject>

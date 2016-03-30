@@ -1,0 +1,394 @@
+%--- MAG User Guide
+%--- LLNCS format 																	
+
+\documentclass{llncs}
+\usepackage{llncsdoc}
+\usepackage{amsmath}
+\usepackage{bbm}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{multirow}
+\usepackage{algorithmic}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{verbatim}
+\usepackage{tikz}
+\usetikzlibrary{arrows}
+\usepackage{courier}
+\usepackage{caption}
+\usepackage{color}
+\usepackage{xcolor}
+\usepackage{colortbl}
+\usepackage{booktabs}
+
+%--- correct bad hyphenation here
+\hyphenation{op-tical net-works semi-conduc-tor}
+\definecolor{LightCyan}{rgb}{0.90,0.90,0.96}
+\definecolor{Gray}{gray}{0.8}
+\definecolor{LightGreen}{rgb}{0,0.6,0}
+\definecolor{GrayNumber}{rgb}{0.5,0.5,0.5}
+
+%--- Stretch
+\newcommand{\ra}[1]{\renewcommand{\arraystretch}{#1}}
+
+\usepackage{setspace}
+
+\setlength{\textfloatsep}{2pt plus 1.0pt minus 1.0pt}
+\setlength{\floatsep}{2pt plus 1.0pt minus 1.0pt}
+\setlength{\intextsep}{2pt plus 1.0pt minus 1.0pt}
+
+%--- Hyper-ref
+\hypersetup{
+	linktocpage,
+	colorlinks=true,
+	citecolor=blue,
+	filecolor=black,
+	linkcolor=blue,
+	urlcolor=blue
+}
+
+%--- Listing
+\lstset{
+	basicstyle=\footnotesize\ttfamily,
+	frame=none,
+	xleftmargin=9pt,
+	framexleftmargin=9pt,
+	breakatwhitespace=false,         			
+	breaklines=true,                 		
+  	captionpos=t,                    			
+  	commentstyle=\color{LightGreen}, 
+	keywordstyle=\color{blue},
+	language=C,
+	numbers=none,
+	numbersep=5pt,
+        numberstyle=\ttfamily\color{GrayNumber},                				
+  	morekeywords={*,..., process, when, default, cell, window, where, init, end},
+	backgroundcolor=\color{LightCyan},
+}
+
+%--- Used to ref fig, listing, table, section
+\newcommand{\figref}{Fig. \ref}
+\newcommand{\lstref}{Listing \ref}
+\newcommand{\tabref}{Table \ref}
+\newcommand{\secref}{Section \ref}
+\newcommand{\chapref}{Chapter \ref}
+\newcommand{\defref}{Definition \ref}
+\newcommand{\theoref}{Theorem \ref}
+\newcommand{\lemref}{Lemma \ref}
+\newcommand{\proref}{Proposition \ref}
+
+%--- authors -----------------------%
+\urldef{\mailsa}\path|{firstname.lastname}@inria.fr|
+\newcommand{\keywords}[1]{\par\addvspace\baselineskip
+\noindent\keywordname\enspace\ignorespaces#1}
+
+%--- begin -------------------------%
+\begin{document}
+\mainmatter
+\title{MAG-1.0 User Manual}
+
+%--- authors -----------------------%
+\author{}
+\institute{INRIA, 35042 Rennes Cedex, France}
+\maketitle
+%---content
+\paragraph{\textbf{Tool Name}}: MAG - Monitor and Aspect Generator
+\paragraph{\textbf{Owened by}}: INRIA, France
+\paragraph{\textbf{Realeased in}}: October 2014.
+\paragraph{\textbf{Description}}: MAG is a tool for generating monitored versions of SystemC models in order to perform statistical model checking with Plasma-Lab. MAG is based on the techniques in the CHIMP tool by Sonali Dutta, Deian Tabakov, and Moshe Y. Vardi.
+\paragraph{\textbf{Download}}: \url{https://project.inria.fr/plasma-lab/mag_manual/}
+\paragraph{\textbf{Platform}}: MAG can be installed and run in any unix environment (e.g., Ubuntu Linux, Mac OS,...).
+\paragraph{\textbf{License}}: MAG uses GNU GPL Version 3.
+%--- components
+\section{Components}
+MAG consists of 3 following components:
+\begin{itemize}
+\item MAG-1.0: This component is reponsible to automatically generate the monitors and the aspect advice file for instrumentation in order to observe execution traces of the SystemC model.
+\item AspectC++-1.2: It is used by MAG to instrument the model-under-verification (MUV).
+\item SystemC-2.3.0\_modified: The patched version of OSCI kernel-2.3.0. The patach enables user-defined temproal resolutions (sampling rates) during observing execution traces.
+\end{itemize}
+%--- installation
+\section{Installing MAG}
+To install and run MAG, the following packages are required:
+\begin{itemize}
+\item boost library
+\item autoconf 2.61 and later
+\item automake 1.10 and later
+\item libtool 2.4 and later
+\item GNU make 3.81 and later
+\item Java SDK or JRE 1.6 and later
+\item g++ with build-essential package
+\item libpuma-dev package used by AspectC++
+\item GNU Scientific Library 1.6 and later for running the example code
+
+\end{itemize}
+To install run \textit{make} (to compile MAG) and run \textit{make clean} to uninstall MAG. In order to make the instrumented SystemC model run, the modified version of SystemC is needed. To install SystemC, please refer to the INSTALL file in the provided SystemC package.
+%--- running
+\section{Running MAG}
+To run MAG, users need to write a configuration file first containing all properties to be verified with the declarations of all used primitives, as well as other necessary information. From this configuration, MAG generates the monitors and an aspect-advice file that is then used by AspectC++ to generate the instrumented model. Finally, the instrumented MUV code and the monitor are compiled together and linked with the SystemC kernel into an executable model. 
+
+The executable model resulting from the first step is run through our plugin to execute the simulation with the inputs provided by users. For every property, Plasma-lab checks the validity of the property according to the execution traces produced by the corresponding monitor.
+\subsection{Generating Monitor with MAG}
+User runs MAG to generate the monitor and aspect advices according to the property to be verified.
+\begin{itemize}
+\item Write the configuration file according to the verifying property (see Section \ref{sec:configuration_file} for more details)
+\item Change to the directory of the MAG tool and run 
+\begin{displaymath}
+mag \; \; -conf \; \; \text{ path to configuration file}
+\end{displaymath}
+\item MAG will generate three files: header and source files of the monitor, and the aspect advice file ``aspect\_definitions.ah'' in the user-defined location
+\end{itemize}
+%---instrumented
+\subsection{Instrumenting with AspectC++}
+User runs AspectC++ with the MUV, the generated monitor, and the aspect advice file to instrument the MUV.
+\begin{itemize}
+\item Change the working directory to AspectC++-1.2
+\item Run the following command to generate puma.config file in the working directory
+\begin{displaymath}
+ag++ \; \; --gen\_config
+\end{displaymath}
+\item Copy the header and source of the generated monitor and the aspect advice file ``aspect\_definitions.ah'' inside the source directory of the MUV
+\item For each header or source file of the MUV, user runs the following command to generate the instrumented version.
+\begin{displaymath}
+\begin{array}{l l}
+ac++ & -c \; SOURCE\_HOME/file\_name\\
+       & -o \; TARGET\_HOME/file\_name\\
+       & -p \; SOURCE\_HOME/ -I \; SOURCE\_HOME\\
+       & -I \; SYSTEMC\_HOME/include\\
+       & --config \; ASPECTC\_HOME/puma.config
+\end{array}
+\end{displaymath}
+where SOURCE\_HOME is the path to the source directory of the MUV, TARGET\_HOME is the path to the directory where user wants the AspectC++ puts the instrumented version, SYSTEMC\_HOME is the path to the patched version of systemc-2.3.0, and ASPECTC\_HOME is the path to the AspectC++. Alternatively, user can use the sheel script included in the examples to make the steps above automatically.
+\end{itemize}
+%---compile
+\subsection{Compiling Instrumented Code}
+\begin{itemize}
+\item In the main header file of the MUV, user includes the monitor header file, for example
+\begin{displaymath}
+\#include \; \; ``monitor\_multi\_lift.h''
+\end{displaymath}
+\item In the source file of the MUV, user adds the following line just before the call to \textit{sc\_start()}
+\begin{displaymath}
+mon\_observer* \; \; obs \; = \; local\_observer::createInstance(1, parameters);
+\end{displaymath}
+The \textit{parameters} depends on the generated monitor, for example, in the included example of multi-lift system in the MAG tool package, it is:
+\begin{displaymath}
+mon\_observer* \; \; obs \; = \; local\_observer::createInstance(1, \&liftsystem);
+\end{displaymath}
+\item User compiles the instrumented MUV with g++ compiler and links with the patched SystemC libary, provided in MAG package
+\end{itemize}
+We also provide the shell scripts in the example directory of MAG tool that automatically generated the instrumented MUV. User can modify them according to his requirements.
+%--- configuration file
+\section{Configuration File Triggers}
+\label{sec:configuration_file}
+The configuration file is used to guide MAG generating the appropriate monitors and aspect advice file using by AspectC++. Its triggers are given as follows:
+\begin{itemize}
+\item \textbf{verbosity}: The integer value between 0 and 9. It represents the level of information messages outputing by MAG. The default value is 1. For example to define the value of verbosity as 6. User can write:
+\begin{displaymath}
+verbosity \; \; 6
+\end{displaymath}
+\item \textbf{output\_file}: The path to the source file of the generating monitor. By default, MAG will generate a file \textit{monitor.cc} in the working directory of MAG. For example:
+\begin{displaymath}
+output\_file \; \; /home/user/model/my\_monitor.cc
+\end{displaymath}
+\item \textbf{output\_header\_file}: The path to the header file of the generating monitor. The default header file is based on the name of the output\_file without extension. For example:
+\begin{displaymath}
+output\_header\_file \; \; /home/user/model/my\_monitor.h
+\end{displaymath}
+\item \textbf{mon\_name}: The name of the generated monitor. The default is monitor. For example:
+\begin{displaymath}
+mon\_name \; \; my\_monitor
+\end{displaymath}
+\item \textbf{plasma\_file}: The path to the generated Plasma Lab project file. For example:
+\begin{displaymath}
+plasma\_file \; \; /home/user/PLASMA\_Lab-1.3.0/my\_project.plasma
+\end{displaymath}
+\item \textbf{plasma\_project\_name}: The generated Plasma Lab project name. For example:
+\begin{displaymath}
+plasma\_project\_name \; \; my\_project
+\end{displaymath}
+\item \textbf{plasma\_model\_name}: The Plasma Lab model. For example:
+\begin{displaymath}
+plasma\_model\_name \; \; my\_model
+\end{displaymath}
+\item \textbf{plasma\_model\_content}: The path to the executable SystemC model. For example:
+\begin{displaymath}
+plasma\_model\_content \; \; /home/user/model/instrumented/muv
+\end{displaymath}
+\item \textbf{ write\_to\_file}: Write execution traces to a file. For example, user does not want to log the traces to file:
+\begin{displaymath}
+write\_to\_file  \; \; false
+\end{displaymath}
+\item \textbf{include}: If the verifying property uses references to an object of a class or a module. Then this trigger indicates the header file that needs to be included in the header file of the monitor. For example, there is a reference to the module A that is declared in the header file A.h, then we define the include trigger as follows:
+\begin{displaymath}
+include \; \; A.h
+\end{displaymath}
+\item \textbf{usertype}: Consider an object of type class A, user wants to refer to attributes of this object. These attributes can be protected, private, public, or accessed by some getting methods. To make the monitor generated by MAG can access these attributes, user uses the usertype trigger as follows:
+\begin{displaymath}
+usertype \; \; A
+\end{displaymath}
+\item \textbf{type}: If the verifying property uses references to an object of class or module of type T, users need to tell MAG that this object has type T. To do that user defines the value of type trigger. For example, consider a property that refers to two object pointers of types class A and B, respectively. Then user defines the trigger as follows:
+\begin{displaymath}
+\begin{array}{ll}
+type \; \; A* a\\
+type \; \; B* b
+\end{array}
+\end{displaymath}
+\item \textbf{attribute}: The value of this trigger defines which attributes of an object that user wants to observe the values during the execution of the model. The trigger syntax is \textit{attribute attribute\_name label}. For example, assume that user wants to observe the value of the private attribute $t$ of the above object pointer $a$ of type class A and labels it with $a\_t$. User can write:
+\begin{displaymath}
+attribute \; \; a\rightarrow t \; a\_t
+\end{displaymath}
+\item \textbf{att\_type}: For each defined attribute, user needs to define its type. MAG supports all primitive datatypes of SystemC and C++ except \text{char} and \textit{string}. The trigger syntax is \textit{att\_type type\_name attribute\_label}. For example, consider the above attribute $a\_t$, assume that it is of type \textit{int}. User write the following trigger in the configuration file:
+\begin{displaymath}
+att\_type \; \; int \; a\_t
+\end{displaymath}
+\item \textbf{eventclock}: The value of this trigger defines a Boolean variable that is true immediately when a specific \textit{event} is notified. This variable ussually is used to define a temporal resolution. For example, consider an event $e$ of the object $a$. The following Boolean variable $e\_notified$ is set to be true whenever $e$ is notified.
+\begin{displaymath}
+eventclock \; \; a\rightarrow e.notified \; e\_notified
+\end{displaymath}
+\item \textbf{location}: The value of this trigger defines a Boolean variable that is true whenever a location in the source code model will arrive during the simulation. Location trigger provides four primitives $entry$, $exit$, $call$, and $return$ that refer to the location immediately before the first executable statement, the location immediately after the last executable statement in a function, the location that contains the function call, and the location immediately after the function call, respectively. The syntaxes of these primitives in the configuration file are given as follows:
+\begin{displaymath}
+\begin{array}{l l}
+location & location\_variable\_name \; function\_pattern : entry\\
+location & location\_variable\_name \; function\_pattern : exit\\
+location & location\_variable\_name \; function\_pattern : call\\
+location & location\_variable\_name \; function\_pattern : return\\
+\end{array}
+\end{displaymath}
+where the \textit{function\_pattern} follows the same as pointcut expressions in AspectC++. The \textit{function\_pattern} has the form $return\_type \; class\_name::funtion\_name(argument\_list)$.
+\item \textbf{plocation}: This trigger helps user define a Boolean variable that holds the value true immediately before or after the execution of all statements that match the value of the trigger (defined as a regular expression). The syntax of this trigger is $plocation \; location\_variable\_name \; statement:before$ or $plocation \; location\_variable\_name \; statement:after$. For example, we want to declare the Boolean variable $loc1$ that holds the value true immediately before the execution of all statements that contain the devision operator ``/'' followed by zero of more spaces, and the variable ``a''. We write the following trigger in the configuration file.
+\begin{displaymath}
+plocation \; \; loc1  \; ``/ *a":before
+\end{displaymath}
+\item \textbf{value}: Using this trigger user can define a variabble that will contain the return value, a parameter value passing to a function defined in the SystemC model. Then user can use this variable to define his formula. The syntax is given as follows:
+\begin{displaymath}
+value \; \; type\_of\_variable \; name\_of\_variable \; function\_pattern:i
+\end{displaymath}
+It defines a variable that contains the value passed as $i^{th}$ ($i$ can be from 1 to the number of arguments the function has) parameter to the function.
+\begin{displaymath}
+value \; \; type\_of\_variable \; name\_of\_variable \; function\_pattern:0
+\end{displaymath} 
+It defines a variable that contains the return value of the function.
+\item \textbf{formula}: The value of this trigger is a specification that contains two elements in the form $\{BLTL formula\}@\{name\}$. The firt element is a BLTL formula and the second one is the name of the specification. For example:
+\begin{displaymath}
+formula \; \; G <= \#100 (a\_t >= 1) @ property\_1
+\end{displaymath}
+\item \textbf{time\_resolution}: The user-defined temporal resolution. For example:
+\begin{displaymath}
+time\_resolution \; \; MON\_TIMED\_NOTIFY\_PHASE\_END
+\end{displaymath}
+\item \textbf{comment}: To make a line as a comment, user puts \# at the beginning of the line, then MAG will ignore it.
+\end{itemize}
+We also provide a dummy mm\_config.txt file in the source code directory of MAG. User can modify it according to his requirements.
+%--- Formula
+\section{BLTL and Clock Expressions}
+User specifies the desired properties in bounded linear temporal logic formulas and the sampling rate of states in the execution traces by clock expressions. BLTL is defined by the following grammar, where the time bound $t$ that represents an amount of simulation time or a number of state changes in an execution trace (in our verification framework, it has the form $<= \#number$):
+\begin{displaymath}
+\varphi ::= \begin{tt}true\end{tt} | \begin{tt}false\end{tt} | p \in AP | \varphi_1 \wedge \varphi_2 | \neg \varphi | \varphi_1 \begin{tt}U_{t}\end{tt} \varphi_2.
+\end{displaymath}
+ The temporal modalities $\begin{tt}F\end{tt}$ (the ``eventually'', sometimes in the future) and $\begin{tt}G\end{tt}$ (the ``always'', from now on forever) can be derived from the ``until'' $\begin{tt}U\end{tt}$ as $\begin{tt}F_{t}\end{tt}\varphi = \begin{tt}true\end{tt}\begin{tt}U_{t}\end{tt} \varphi$ and $\begin{tt}G_{t}\end{tt}\varphi = \neg \begin{tt}F_{t}\end{tt}\neg \varphi$, respectively. The semantics of BLTL is defined w.r.t finite sequences of states of $\mathcal{M}$. We denote the fact that $\omega$, a finite sequence of states, satisfies the BLTL formula $\varphi$ by $\omega \models \varphi$.
+\begin{itemize}
+\renewcommand{\labelitemi}{$\bullet$}
+\item $\omega^k \models \begin{tt}true\end{tt}$ and $\omega^k \not \models \begin{tt}false\end{tt}$
+\item $\omega^{k} \models p, p \in AP$ if and only if $p \in L(\omega(k))$
+\item $\omega^{k} \models \varphi_1 \wedge \varphi_2$ if and only if $\omega^k \models \varphi_1$ and $\omega^k \models \varphi_2$
+\item $\omega^k \models \neg \varphi$ if and only if $\omega^k \not \models \varphi$
+\item $\omega^k \models \varphi_1 \begin{tt}U_{t}\end{tt} \varphi_2$ if and only if there exists an integer $i$ such that $\omega^{k+i} \models \varphi_2$, $\Sigma_{j < i}(t_j - t_{j-1}) \leq t$, and for each $0 \leq j < i, \omega^{k+j} \models \varphi_1$
+\end{itemize} 
+
+The set of atomic propositions $AP$ that is formed by the primitives that are declared in the configuration file of our framework and let users define properties about the states of user-code, and SystemC kernel. We have the following:
+\begin{displaymath}
+\begin{array}{l l l}
+SystemC\_expr &::=& model\_expr | kernel\_expr\\
+%---
+model\_expr &::=& att\_expr | loc\_expr | arg\_expr | proc\_expr\\
+%---
+loc\_expr &::=& [\begin{tt}before\end{tt} | \begin{tt}after\end{tt}]\{code\_label |\\
+%---
+          &&syntax\_expr\} | func\_name:\\
+%---
+          && \{\begin{tt}entry\end{tt} | \begin{tt}exit\end{tt} | \begin{tt}call\end{tt} | \begin{tt}return\end{tt}\}\\
+%---
+arg\_expr &::=& func\_name: nonnegative\_integer\\
+%---
+proc\_expr &::=& proc\_name.\begin{tt}proc\_state\end{tt}\\
+%---
+kernel\_expr &::=& phase\_expr | event\_expr\\
+%---
+phase\_expr &::=& \begin{tt}kernel\_phase\end{tt}\\
+%---
+event\_expr &::=& event\_name.\begin{tt}notified\end{tt}
+\end{array}
+\end{displaymath}
+
+\textit{att\_expr} is an expression that involves evaluations of variables including module's \textit{protected} and \textit{private} attributes. User uses $attribute$ trigger to form \textit{model\_expr}. For example, $attribute \; m \rightarrow a \; a$ to observe the value of $a$ in the module $M$ given that the triggers usertype and type are defined as $usertype \; M$ and $type \; M* \; m$, respectively.
+
+\textit{loc\_expr} is an expression that uses a location in the source code of the verifying model which is defined using \textit{location} and \textit{plocation} triggers in the configuration file. For example, assume that we want to specify the property \textit{``always the value of the variable a in the module M is different from 0 whenever it is used as a divisor within t seconds''}. We first define the trigger $plocation \; loc1  \; ``/ *a":before$ that declares the Boolean variable $loc1$ that holds the value true immediately before the execution of all statements that contain the devision operator ``/'' followed by zero of more spaces, and the variable ``a''. With the attribute above, the property is expressed as follows:
+\begin{displaymath}
+G_{t}(loc1 \rightarrow (a != 0))
+\end{displaymath}
+
+Another example, assume that user wants to specify the property \textit{``$\begin{tt}send()\end{tt}$ remains blocked until $\begin{tt}receive()\end{tt}$ has returned within t seconds''}. The following triggers declare Boolean variables $send\_start$ and $send\_done$ that hold the value true immediately before and after a function call of the function $send()$ of the module $producer$, respectively.
+\begin{displaymath}
+\begin{array}{l}
+location \; send\_start \; ``\% producer::send()":call\\
+location \; send\_done \; ``\% producer::send()":return
+\end{array}
+\end{displaymath}
+Similarly, the trigger $location \; rcv \; ``\% consumer::receive()":return$ declares a Boolean variable $rcv$ that holds the value true immediately after a function call of the function $receive()$ of the module $consumer$. Using these triggers, the property is expressed as follows:
+\begin{displaymath}
+G_{t}(send\_start \rightarrow(!send\_done \; \begin{tt}U_{t}\end{tt} \; rcv))
+\end{displaymath}
+
+\textit{arg\_expr} is an expression that uses the return values, parameter values passing to functions defined in the SystemC model. This expression can be formed by using the trigger \textit{value} in the configuration file.
+
+For each process name, the primitive \textit{proc\_expr} indicates the status of this process in the simulator kernel that can be \textit{waiting}, \textit{runnable}, or \textit{running}. The \textit{kernel\_expr} consists of the primitives to expose the current state of the kernel (\textit{phase\_expr}) (e.g., end of delta-cycle notification) and when a specific event is notified (\textit{event\_expr}). For instance, the following trigger declares a Boolean variable $wevent$ that holds immediately when $write\_event$ is notified.
+\begin{displaymath}
+eventclock \; wevent \; write\_event.notified
+\end{displaymath}
+This variable can be used to define a temporal resolution in the configuration file of our framework.
+
+As explained earlier, users can define their own temporal resolutions. A temporal resolution is specified by using a disjunction of events, locations or kernel phases as in the BLTL formula of the form $(clk_1 | clk_2 |...)$. For instance, the specification 
+\begin{displaymath}
+time\_resolution \; \; loc1
+\end{displaymath}
+will check the formula over a trace of states sampled each time the location $\begin{tt}loc1\end{tt}$ is reached. If user provide no clock expression, MAG will sample at all 18 predefined kernel phases. Table \ref{tab:table1} shows the list of 18 predefined kernel phases.
+\begin{table}
+\centering
+\ra{1.3}
+\begin{tabular}{@{}lcl@{}}
+\toprule
+Phase name  & \phantom{abc} & Sampling location \\
+\midrule
+MON\_INIT\_PHASE\_BEGIN && Before initialization phase begins\\
+MON\_INIT\_UPDATE\_PHASE\_BEGIN && Before initialization update phase begins\\
+MON\_INIT\_UPDATE\_PHASE\_END && After initialization update phase ends\\
+MON\_INIT\_DELTA\_NOTIFY\_PHASE\_BEGIN && Before initialization delta notification phase begins\\
+MON\_INIT\_DELTA\_NOTIFY\_PHASE\_ENDS && After initialization delta notification
+phase ends\\
+MON\_INIT\_PHASE\_END && After initialization phase ends\\
+MON\_DELTA\_CYCLE\_BEGIN && Before a delta cycle begins\\
+MON\_DELTA\_CYCLE\_END && After a delta cycle ends\\
+MON\_EVALUATE\_PHASE\_BEGIN && Before an evaluation phase begins\\
+MON\_EVALUATE\_PHASE\_END && After an evaluation phase ends\\
+MON\_UPDATE\_PHASE\_BEGIN && Before an update phase begins\\
+MON\_UPDATE\_PHASE\_END && After an update phase ends\\
+MON\_DELTA\_NOTIFY\_PHASE\_BEGIN && Before a delta notification phase begins\\
+MON\_DELTA\_NOITIFY\_PHASE\_END && After a delta notification phase ends\\
+MON\_TIMED\_NOTIFY\_PHASE\_BEGIN && Before a timed notification phase begins\\
+MON\_TIMED\_NOTIFY\_PHASE\_END && After a timed notification phase ends\\
+MON\_METHOD\_SUSPEND && After an sc\_method has ended execution\\
+MON\_THREAD\_SUSPEND && After an sc\_thread has suspended\\
+\bottomrule
+\end{tabular}
+\caption{Predefined Kernel Phases}
+\label{tab:table1}
+\end{table}
+
+%--- Contact
+\section{Contact}
+INRIA Rennes\\
+263 avenue du G\'en\'eral Leclerc, 35042 Rennes, France
+%--- end ---------------------------%
+\end{document}

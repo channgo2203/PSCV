@@ -1,0 +1,15 @@
+This test implements a program consisting of 3 threads. Each thread has 2 synchronization 
+points (3 segments) using waits statements. Therefore, there are totally (3!)^3 = 216 
+execution orders.
+ 
+To compile:
+make
+
+To run:
+./sweep_ex3 [number of runs]
+
+If a number of runs is not provided, then the model is run until all possible execution 
+orders is reached. The report presents the scheduler coverage (the number of different 
+execution orders by the maxmum number of possible execition orders) and the verification 
+efficiency (the number of different execution orders by the number of runs)
+

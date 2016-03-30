@@ -1,0 +1,79 @@
+-- PSCV - A Runtime Verification Tools for Probabilistic SystemC Models
+-- https://project.inria.fr/pscv/
+
+This is a source version of MAG and patch SystemC2-3.0 kernel. It also contains some working example code.
+Unzip the archive into a directory of your choice. There are the following sub-folders:
++ mag: MAG program for generating the C++ monitor and aspect-advices for AspectC++
+
++ systemc-2.3.0_modified: the patch version of SystemC with random scheduler implementation
+
++ aspectc++: AspectC++ programs
+
++ examples: some example code
+
++ docs: MAG user guide for writing configuration file, usage of MAG, and code instrumentation
+ 
+
+-- Requirements
+To install and run MAG, Patch SystemC-2.3.0, and Plasma Lab, the following packages are required:
+    boost library
+    autoconf 2.61 and later
+    automake 1.10 and later
+    libtool 2.4 and later
+    GNU make 3.81 and later
+    Java SDK or JRE 1.6 and later
+    g++ with build-essential package
+    libpuma-dev package used by AspectC++
+    GNU Scientific Library 1.6 and later for running the example code
+
+
+-- How to install PSCV?
++ To compile PSCV, in the folder pscv, run the commands:
+      make
+      make clean (for uninstalling pscv)
+
+The program mag and dynamic library of patch SystemC will be in folders mag and systemc-2.3.0_modified/lib-linux64 (if you comppile for Linux/x86-64bit), respectively.
+
++ Make AspectC++ runnable by running the commands:
+      chmod +x aspectc++/ag++
+      chmod +x aspectc++/ac++
+
++ Add the path to dynamic library of SystemC to LD_LIBRARY_PATH, for example,
+      export LD_LIBRARY_PATH=/home/username/pscv/systemc-2.3.0_modified/lib-linux64:$LD_LIBRARY_PATH
+
+
+-- How to run the examples?
+The examples consist of:
++ producer_consumer: the implemetation of a fixed size FIFO based on the example provided by OSCI SystemC with probabilities of writing to the FIFO and reading from the FIFO
+
++ control_system: the large model of dependability of an embedded control system. The system consists of an input processor (I) connected to 50 groups of 3 sensors, an output processor (O), connected to 30 groups of 2 actuators, and a main processor (M), that communicates with I and O through a bus. At every cycle, 1 minute, the main processor polls data from the input processor that reads and processes data from the sensor groups. Based on this data, the main processor constructs commands to be passed to the output processor for controlling the actuator groups. 
+
++ random_scheduler: some examples to test the implementation of the random scheduler for SystemC kernel
+
+We provide some shell script templates for generating monitor, aspect-advice files and instrumenting the MUV code with AspectC++. For example, to run the producer_consumer example code. All examples except the random_scheduler, the structure of the source code is:
++ src: the source code of the example, including a configuration file named mm_config.txt
+
++ ins: instrumented code output folder from AspectC++, including a provided Makefile template
+
++ gen: C++ monitor and aspect-advice files output folder from MAG
+
++ mag_run.sh: a provided bash shell script template to run MAG tool
+
++ aspectc++_run.sh: a provided bash shell script template to run AspectC++ tool
+
+The running contains the following steps:
++ In the src folder, modify the file mm_config.txt as your environment (i.e., path to the ins and gen folders)
+
++ Go to the producer_consumer folder, modify the file mag_run.sh (i.e., the path to SystemC library, the GNU Scientific Libarary, the path to MAG) and run it with the command ./mag_run.sh
+
++ In the producer_consumer folder, modify the file aspectc++_run.sh (i.e., the path to SystemC library, the GSL, the AspectC++) and run it with the command ./aspectc++_run.sh
+
++ Go to the folder ins, modify the Makefile (i.e., the path to SystemC library, the GSL)
+
++ In the producer_consumer folder run the command
+     make
+
++ Launch Plasma Lab-1.3.8 with the SystemC plugin in the "plugins" folder and then open the producer_consumer.plasma file. Please refer to the tutorial of Plasma to know how to check the properties.
+
+Note that you need to install GSL 1.6 or later (http://www.gnu.org/software/gsl/) to compile the examples at /usr/local/lib by default.
+ 

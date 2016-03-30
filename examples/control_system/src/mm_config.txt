@@ -1,0 +1,214 @@
+# Where to output the monitor(s)
+ output_file   ../gen/monitor.cc
+
+
+# The (class) name of the generated monitors
+ mon_name    monitor
+
+
+# Plasma project file
+ plasma_file   ../gen/ecs.plasma
+
+
+# Plasma project name
+ plasma_project_name	ecs
+
+
+# Plasma model name
+ plasma_model_name   ecs_model
+
+
+# Plasma model content (absolute path to the instrumented executable SystemC program)
+ plasma_model_content	/home/channgo/Tools/pscv/examples/control_system/ins/ecs
+
+
+
+# Set to write traces to a file
+ write_to_file     false
+
+
+# Declare monitors as friend to adder class
+ usertype Sa_grp
+ usertype Proci
+ usertype Proco
+ usertype Procm
+ usertype Bus
+ usertype Clk_tick
+
+
+# Example of how to declare type of non-native variables
+ type Sa_grp* pnt_sa
+ type Proci* pnt_proci
+ type Proco* pnt_proco
+ type Procm* pnt_procm
+ type Clk_tick* pnt_clktick
+
+
+# Module attributes
+ attribute pnt_sa->sensors number_sensors
+ attribute pnt_sa->actuators number_actuators
+ attribute pnt_proci->proci_status proci_status
+ attribute pnt_proci->number_reboot proci_reboot_number
+ attribute pnt_proco->proco_status proco_status
+ attribute pnt_proco->number_reboot proco_reboot_number
+ attribute pnt_procm->procm_status procm_status 
+ attribute pnt_procm->count timeout_counts
+# attribute pnt_clktick->ticks number_ticks
+
+# Attribute type
+ att_type int number_sensors
+ att_type int number_actuators
+ att_type int proci_status
+ att_type int proci_reboot_number
+ att_type int proco_status
+ att_type int proco_reboot_number
+ att_type int procm_status
+ att_type int timeout_counts
+# att_type int number_ticks
+
+# Event notification
+ eventclock pnt_clktick->e_tick.notified tick_notified
+
+
+# Locations
+# location loc1 "% Producer::producer_foo(...)":entry
+
+
+# Pattern locations
+
+# Define variables values at specific locations - callback values
+# value bool foor "bool Producer::producer_foo(...)" :0
+# value bool foop "bool Producer::producer_foo(...)" :1
+
+
+# Time resolution
+# time_resolution MON_TIMED_NOTIFY_PHASE_END
+ time_resolution tick_notified
+
+# The time durations: (5d-14400), (10d-28800), (15d-44000), (20d-57600), (25d-72000), (30d-86400)
+
+# Sensor failure
+ formula F <= #14400 (proci_status = 2 & number_sensors < 37) @ sensor_14400
+ 
+ formula F <= #28800 (proci_status = 2 & number_sensors < 37) @ sensor_28800
+ 
+ formula F <= #43200 (proci_status = 2 & number_sensors < 37) @ sensor_43200	
+ 
+ formula F <= #57600 (proci_status = 2 & number_sensors < 37) @ sensor_57600
+
+ formula F <= #72000 (proci_status = 2 & number_sensors < 37) @ sensor_72000
+
+ formula F <= #86400 (proci_status = 2 & number_sensors < 37) @ sensor_86400
+
+# Sensor failuare first
+ formula (!((proci_status = 2 & number_sensors < 37) | (timeout_counts > 4) | (proco_status = 2 & number_actuators < 27) | (procm_status = 0))) U <= #14400 (proci_status = 2 & number_sensors < 37) @ ff_sensor_14400
+
+ formula (!((proci_status = 2 & number_sensors < 37) | (timeout_counts > 4) | (proco_status = 2 & number_actuators < 27) | (procm_status = 0))) U <= #28800 (proci_status = 2 & number_sensors < 37) @ ff_sensor_28800
+
+ formula (!((proci_status = 2 & number_sensors < 37) | (timeout_counts > 4) | (proco_status = 2 & number_actuators < 27) | (procm_status = 0))) U <= #43200 (proci_status = 2 & number_sensors < 37) @ ff_sensor_43200
+
+ formula (!((proci_status = 2 & number_sensors < 37) | (timeout_counts > 4) | (proco_status = 2 & number_actuators < 27) | (procm_status = 0))) U <= #57600 (proci_status = 2 & number_sensors < 37) @ ff_sensor_57600
+
+ formula (!((proci_status = 2 & number_sensors < 37) | (timeout_counts > 4) | (proco_status = 2 & number_actuators < 27) | (procm_status = 0))) U <= #72000 (proci_status = 2 & number_sensors < 37) @ ff_sensor_72000
+
+ formula (!((proci_status = 2 & number_sensors < 37) | (timeout_counts > 4) | (proco_status = 2 & number_actuators < 27) | (procm_status = 0))) U <= #86400 (proci_status = 2 & number_sensors < 37) @ ff_sensor_86400
+
+# Actuator failure
+ formula F <= #14400 (proco_status = 2 & number_actuators < 27) @ actuator_14400
+
+ formula F <= #28800 (proco_status = 2 & number_actuators < 27) @ actuator_28800
+
+ formula F <= #43200 (proco_status = 2 & number_actuators < 27) @ actuator_43200
+
+ formula F <= #57600 (proco_status = 2 & number_actuators < 27) @ actuator_57600
+
+ formula F <= #72000 (proco_status = 2 & number_actuators < 27) @ actuator_72000
+
+ formula F <= #86400 (proco_status = 2 & number_actuators < 27) @ actuator_86400
+
+# Actuator failuare first
+ formula (!((proci_status = 2 & number_sensors < 37) | (timeout_counts > 4) | (proco_status = 2 & number_actuators < 27) | (procm_status = 0))) U <= #14400 (proco_status = 2 & number_actuators < 27) @ ff_actuator_14400
+
+ formula (!((proci_status = 2 & number_sensors < 37) | (timeout_counts > 4) | (proco_status = 2 & number_actuators < 27) | (procm_status = 0))) U <= #28800 (proco_status = 2 & number_actuators < 27) @ ff_actuator_28800
+
+ formula (!((proci_status = 2 & number_sensors < 37) | (timeout_counts > 4) | (proco_status = 2 & number_actuators < 27) | (procm_status = 0))) U <= #43200 (proco_status = 2 & number_actuators < 27) @ ff_actuator_43200
+
+ formula (!((proci_status = 2 & number_sensors < 37) | (timeout_counts > 4) | (proco_status = 2 & number_actuators < 27) | (procm_status = 0))) U <= #57600 (proco_status = 2 & number_actuators < 27) @ ff_actuator_57600
+
+ formula (!((proci_status = 2 & number_sensors < 37) | (timeout_counts > 4) | (proco_status = 2 & number_actuators < 27) | (procm_status = 0))) U <= #72000 (proco_status = 2 & number_actuators < 27) @ ff_actuator_72000
+
+ formula (!((proci_status = 2 & number_sensors < 37) | (timeout_counts > 4) | (proco_status = 2 & number_actuators < 27) | (procm_status = 0))) U <= #86400 (proco_status = 2 & number_actuators < 27) @ ff_actuator_86400
+
+# IO failure
+ formula F <= #14400 (timeout_counts > 4) @ io_14400
+
+ formula F <= #28800 (timeout_counts > 4) @ io_28800
+
+ formula F <= #43200 (timeout_counts > 4) @ io_43200
+
+ formula F <= #57600 (timeout_counts > 4) @ io_57600
+
+ formula F <= #72000 (timeout_counts > 4) @ io_72000
+
+ formula F <= #86400 (timeout_counts > 4) @ io_86400
+
+# IO failure first
+ formula (!((proci_status = 2 & number_sensors < 37) | (timeout_counts > 4) | (proco_status = 2 & number_actuators < 27) | (procm_status = 0))) U <= #14400 (timeout_counts > 4) @ ff_io_14400
+
+ formula (!((proci_status = 2 & number_sensors < 37) | (timeout_counts > 4) | (proco_status = 2 & number_actuators < 27) | (procm_status = 0))) U <= #28800 (timeout_counts > 4) @ ff_io_28800
+
+ formula (!((proci_status = 2 & number_sensors < 37) | (timeout_counts > 4) | (proco_status = 2 & number_actuators < 27) | (procm_status = 0))) U <= #43200 (timeout_counts > 4) @ ff_io_43200
+
+ formula (!((proci_status = 2 & number_sensors < 37) | (timeout_counts > 4) | (proco_status = 2 & number_actuators < 27) | (procm_status = 0))) U <= #57600 (timeout_counts > 4) @ ff_io_57600
+
+ formula (!((proci_status = 2 & number_sensors < 37) | (timeout_counts > 4) | (proco_status = 2 & number_actuators < 27) | (procm_status = 0))) U <= #72000 (timeout_counts > 4) @ ff_io_72000
+
+ formula (!((proci_status = 2 & number_sensors < 37) | (timeout_counts > 4) | (proco_status = 2 & number_actuators < 27) | (procm_status = 0))) U <= #86400 (timeout_counts > 4) @ ff_io_86400
+
+# Main processor failure
+ formula F <= #14400 (procm_status = 0) @ procm_14400
+
+ formula F <= #28800 (procm_status = 0) @ procm_28800
+
+ formula F <= #43200 (procm_status = 0) @ procm_43200
+
+ formula F <= #57600 (procm_status = 0) @ procm_57600
+
+ formula F <= #72000 (procm_status = 0) @ procm_72000
+
+ formula F <= #86400 (procm_status = 0) @ procm_86400
+
+# Main processor failure first
+ formula (!((proci_status = 2 & number_sensors < 37) | (timeout_counts > 4) | (proco_status = 2 & number_actuators < 27) | (procm_status = 0))) U <= #14400 (procm_status = 0) @ ff_procm_14400
+
+ formula (!((proci_status = 2 & number_sensors < 37) | (timeout_counts > 4) | (proco_status = 2 & number_actuators < 27) | (procm_status = 0))) U <= #28800 (procm_status = 0) @ ff_procm_28800
+
+ formula (!((proci_status = 2 & number_sensors < 37) | (timeout_counts > 4) | (proco_status = 2 & number_actuators < 27) | (procm_status = 0))) U <= #43200 (procm_status = 0) @ ff_procm_43200
+
+ formula (!((proci_status = 2 & number_sensors < 37) | (timeout_counts > 4) | (proco_status = 2 & number_actuators < 27) | (procm_status = 0))) U <= #57600 (procm_status = 0) @ ff_procm_57600
+
+ formula (!((proci_status = 2 & number_sensors < 37) | (timeout_counts > 4) | (proco_status = 2 & number_actuators < 27) | (procm_status = 0))) U <= #72000 (procm_status = 0) @ ff_procm_72000
+
+ formula (!((proci_status = 2 & number_sensors < 37) | (timeout_counts > 4) | (proco_status = 2 & number_actuators < 27) | (procm_status = 0))) U <= #86400 (procm_status = 0) @ ff_procm_86400
+
+# System downs
+ formula F <= #14400 ((proci_status = 2 & number_sensors < 37) | (timeout_counts > 4) | (proco_status = 2 & number_actuators < 27) | (procm_status = 0)) @ down_14400
+
+ formula F <= #28800 ((proci_status = 2 & number_sensors < 37) | (timeout_counts > 4) | (proco_status = 2 & number_actuators < 27) | (procm_status = 0)) @ down_28800
+
+ formula F <= #43200 ((proci_status = 2 & number_sensors < 37) | (timeout_counts > 4) | (proco_status = 2 & number_actuators < 27) | (procm_status = 0)) @ down_43200
+
+ formula F <= #57600 ((proci_status = 2 & number_sensors < 37) | (timeout_counts > 4) | (proco_status = 2 & number_actuators < 27) | (procm_status = 0)) @ down_57600
+
+ formula F <= #72000 ((proci_status = 2 & number_sensors < 37) | (timeout_counts > 4) | (proco_status = 2 & number_actuators < 27) | (procm_status = 0)) @ down_72000
+
+ formula F <= #86400 ((proci_status = 2 & number_sensors < 37) | (timeout_counts > 4) | (proco_status = 2 & number_actuators < 27) | (procm_status = 0)) @ down_86400
+
+
+#Includes the file where adder is declared
+ include sa_grp.h
+ include proci.h
+ include proco.h
+ include procm.h
+ include bus.h
+ include clk_tick.h

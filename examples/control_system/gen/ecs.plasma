@@ -1,0 +1,173 @@
+﻿<?xml version="1.0"?>
+    <PlasmaProject name="ecs">
+        <models>
+            <model name="ecs_model" type="systemc">
+                <content>/home/channgo/Tools/pscv/examples/control_system/ins/ecs</content>
+            </model>
+        </models>
+        <requirements>
+            <requirement name="sensor_14400" type="bltl">
+                <content>F &lt;= #14400 (proci_status = 2 &amp; number_sensors &lt; 37) </content>
+            </requirement>
+            <requirement name="sensor_28800" type="bltl">
+                <content>F &lt;= #28800 (proci_status = 2 &amp; number_sensors &lt; 37) </content>
+            </requirement>
+            <requirement name="sensor_43200" type="bltl">
+                <content>F &lt;= #43200 (proci_status = 2 &amp; number_sensors &lt; 37) </content>
+            </requirement>
+            <requirement name="sensor_57600" type="bltl">
+                <content>F &lt;= #57600 (proci_status = 2 &amp; number_sensors &lt; 37) </content>
+            </requirement>
+            <requirement name="sensor_72000" type="bltl">
+                <content>F &lt;= #72000 (proci_status = 2 &amp; number_sensors &lt; 37) </content>
+            </requirement>
+            <requirement name="sensor_86400" type="bltl">
+                <content>F &lt;= #86400 (proci_status = 2 &amp; number_sensors &lt; 37) </content>
+            </requirement>
+            <requirement name="ff_sensor_14400" type="bltl">
+                <content>(!((proci_status = 2 &amp; number_sensors &lt; 37) | (timeout_counts &gt; 4) | (proco_status = 2 &amp; number_actuators &lt; 27) | (procm_status = 0))) U &lt;= #14400 (proci_status = 2 &amp; number_sensors &lt; 37) </content>
+            </requirement>
+            <requirement name="ff_sensor_28800" type="bltl">
+                <content>(!((proci_status = 2 &amp; number_sensors &lt; 37) | (timeout_counts &gt; 4) | (proco_status = 2 &amp; number_actuators &lt; 27) | (procm_status = 0))) U &lt;= #28800 (proci_status = 2 &amp; number_sensors &lt; 37) </content>
+            </requirement>
+            <requirement name="ff_sensor_43200" type="bltl">
+                <content>(!((proci_status = 2 &amp; number_sensors &lt; 37) | (timeout_counts &gt; 4) | (proco_status = 2 &amp; number_actuators &lt; 27) | (procm_status = 0))) U &lt;= #43200 (proci_status = 2 &amp; number_sensors &lt; 37) </content>
+            </requirement>
+            <requirement name="ff_sensor_57600" type="bltl">
+                <content>(!((proci_status = 2 &amp; number_sensors &lt; 37) | (timeout_counts &gt; 4) | (proco_status = 2 &amp; number_actuators &lt; 27) | (procm_status = 0))) U &lt;= #57600 (proci_status = 2 &amp; number_sensors &lt; 37) </content>
+            </requirement>
+            <requirement name="ff_sensor_72000" type="bltl">
+                <content>(!((proci_status = 2 &amp; number_sensors &lt; 37) | (timeout_counts &gt; 4) | (proco_status = 2 &amp; number_actuators &lt; 27) | (procm_status = 0))) U &lt;= #72000 (proci_status = 2 &amp; number_sensors &lt; 37) </content>
+            </requirement>
+            <requirement name="ff_sensor_86400" type="bltl">
+                <content>(!((proci_status = 2 &amp; number_sensors &lt; 37) | (timeout_counts &gt; 4) | (proco_status = 2 &amp; number_actuators &lt; 27) | (procm_status = 0))) U &lt;= #86400 (proci_status = 2 &amp; number_sensors &lt; 37) </content>
+            </requirement>
+            <requirement name="actuator_14400" type="bltl">
+                <content>F &lt;= #14400 (proco_status = 2 &amp; number_actuators &lt; 27) </content>
+            </requirement>
+            <requirement name="actuator_28800" type="bltl">
+                <content>F &lt;= #28800 (proco_status = 2 &amp; number_actuators &lt; 27) </content>
+            </requirement>
+            <requirement name="actuator_43200" type="bltl">
+                <content>F &lt;= #43200 (proco_status = 2 &amp; number_actuators &lt; 27) </content>
+            </requirement>
+            <requirement name="actuator_57600" type="bltl">
+                <content>F &lt;= #57600 (proco_status = 2 &amp; number_actuators &lt; 27) </content>
+            </requirement>
+            <requirement name="actuator_72000" type="bltl">
+                <content>F &lt;= #72000 (proco_status = 2 &amp; number_actuators &lt; 27) </content>
+            </requirement>
+            <requirement name="actuator_86400" type="bltl">
+                <content>F &lt;= #86400 (proco_status = 2 &amp; number_actuators &lt; 27) </content>
+            </requirement>
+            <requirement name="ff_actuator_14400" type="bltl">
+                <content>(!((proci_status = 2 &amp; number_sensors &lt; 37) | (timeout_counts &gt; 4) | (proco_status = 2 &amp; number_actuators &lt; 27) | (procm_status = 0))) U &lt;= #14400 (proco_status = 2 &amp; number_actuators &lt; 27) </content>
+            </requirement>
+            <requirement name="ff_actuator_28800" type="bltl">
+                <content>(!((proci_status = 2 &amp; number_sensors &lt; 37) | (timeout_counts &gt; 4) | (proco_status = 2 &amp; number_actuators &lt; 27) | (procm_status = 0))) U &lt;= #28800 (proco_status = 2 &amp; number_actuators &lt; 27) </content>
+            </requirement>
+            <requirement name="ff_actuator_43200" type="bltl">
+                <content>(!((proci_status = 2 &amp; number_sensors &lt; 37) | (timeout_counts &gt; 4) | (proco_status = 2 &amp; number_actuators &lt; 27) | (procm_status = 0))) U &lt;= #43200 (proco_status = 2 &amp; number_actuators &lt; 27) </content>
+            </requirement>
+            <requirement name="ff_actuator_57600" type="bltl">
+                <content>(!((proci_status = 2 &amp; number_sensors &lt; 37) | (timeout_counts &gt; 4) | (proco_status = 2 &amp; number_actuators &lt; 27) | (procm_status = 0))) U &lt;= #57600 (proco_status = 2 &amp; number_actuators &lt; 27) </content>
+            </requirement>
+            <requirement name="ff_actuator_72000" type="bltl">
+                <content>(!((proci_status = 2 &amp; number_sensors &lt; 37) | (timeout_counts &gt; 4) | (proco_status = 2 &amp; number_actuators &lt; 27) | (procm_status = 0))) U &lt;= #72000 (proco_status = 2 &amp; number_actuators &lt; 27) </content>
+            </requirement>
+            <requirement name="ff_actuator_86400" type="bltl">
+                <content>(!((proci_status = 2 &amp; number_sensors &lt; 37) | (timeout_counts &gt; 4) | (proco_status = 2 &amp; number_actuators &lt; 27) | (procm_status = 0))) U &lt;= #86400 (proco_status = 2 &amp; number_actuators &lt; 27) </content>
+            </requirement>
+            <requirement name="io_14400" type="bltl">
+                <content>F &lt;= #14400 (timeout_counts &gt; 4) </content>
+            </requirement>
+            <requirement name="io_28800" type="bltl">
+                <content>F &lt;= #28800 (timeout_counts &gt; 4) </content>
+            </requirement>
+            <requirement name="io_43200" type="bltl">
+                <content>F &lt;= #43200 (timeout_counts &gt; 4) </content>
+            </requirement>
+            <requirement name="io_57600" type="bltl">
+                <content>F &lt;= #57600 (timeout_counts &gt; 4) </content>
+            </requirement>
+            <requirement name="io_72000" type="bltl">
+                <content>F &lt;= #72000 (timeout_counts &gt; 4) </content>
+            </requirement>
+            <requirement name="io_86400" type="bltl">
+                <content>F &lt;= #86400 (timeout_counts &gt; 4) </content>
+            </requirement>
+            <requirement name="ff_io_14400" type="bltl">
+                <content>(!((proci_status = 2 &amp; number_sensors &lt; 37) | (timeout_counts &gt; 4) | (proco_status = 2 &amp; number_actuators &lt; 27) | (procm_status = 0))) U &lt;= #14400 (timeout_counts &gt; 4) </content>
+            </requirement>
+            <requirement name="ff_io_28800" type="bltl">
+                <content>(!((proci_status = 2 &amp; number_sensors &lt; 37) | (timeout_counts &gt; 4) | (proco_status = 2 &amp; number_actuators &lt; 27) | (procm_status = 0))) U &lt;= #28800 (timeout_counts &gt; 4) </content>
+            </requirement>
+            <requirement name="ff_io_43200" type="bltl">
+                <content>(!((proci_status = 2 &amp; number_sensors &lt; 37) | (timeout_counts &gt; 4) | (proco_status = 2 &amp; number_actuators &lt; 27) | (procm_status = 0))) U &lt;= #43200 (timeout_counts &gt; 4) </content>
+            </requirement>
+            <requirement name="ff_io_57600" type="bltl">
+                <content>(!((proci_status = 2 &amp; number_sensors &lt; 37) | (timeout_counts &gt; 4) | (proco_status = 2 &amp; number_actuators &lt; 27) | (procm_status = 0))) U &lt;= #57600 (timeout_counts &gt; 4) </content>
+            </requirement>
+            <requirement name="ff_io_72000" type="bltl">
+                <content>(!((proci_status = 2 &amp; number_sensors &lt; 37) | (timeout_counts &gt; 4) | (proco_status = 2 &amp; number_actuators &lt; 27) | (procm_status = 0))) U &lt;= #72000 (timeout_counts &gt; 4) </content>
+            </requirement>
+            <requirement name="ff_io_86400" type="bltl">
+                <content>(!((proci_status = 2 &amp; number_sensors &lt; 37) | (timeout_counts &gt; 4) | (proco_status = 2 &amp; number_actuators &lt; 27) | (procm_status = 0))) U &lt;= #86400 (timeout_counts &gt; 4) </content>
+            </requirement>
+            <requirement name="procm_14400" type="bltl">
+                <content>F &lt;= #14400 (procm_status = 0) </content>
+            </requirement>
+            <requirement name="procm_28800" type="bltl">
+                <content>F &lt;= #28800 (procm_status = 0) </content>
+            </requirement>
+            <requirement name="procm_43200" type="bltl">
+                <content>F &lt;= #43200 (procm_status = 0) </content>
+            </requirement>
+            <requirement name="procm_57600" type="bltl">
+                <content>F &lt;= #57600 (procm_status = 0) </content>
+            </requirement>
+            <requirement name="procm_72000" type="bltl">
+                <content>F &lt;= #72000 (procm_status = 0) </content>
+            </requirement>
+            <requirement name="procm_86400" type="bltl">
+                <content>F &lt;= #86400 (procm_status = 0) </content>
+            </requirement>
+            <requirement name="ff_procm_14400" type="bltl">
+                <content>(!((proci_status = 2 &amp; number_sensors &lt; 37) | (timeout_counts &gt; 4) | (proco_status = 2 &amp; number_actuators &lt; 27) | (procm_status = 0))) U &lt;= #14400 (procm_status = 0) </content>
+            </requirement>
+            <requirement name="ff_procm_28800" type="bltl">
+                <content>(!((proci_status = 2 &amp; number_sensors &lt; 37) | (timeout_counts &gt; 4) | (proco_status = 2 &amp; number_actuators &lt; 27) | (procm_status = 0))) U &lt;= #28800 (procm_status = 0) </content>
+            </requirement>
+            <requirement name="ff_procm_43200" type="bltl">
+                <content>(!((proci_status = 2 &amp; number_sensors &lt; 37) | (timeout_counts &gt; 4) | (proco_status = 2 &amp; number_actuators &lt; 27) | (procm_status = 0))) U &lt;= #43200 (procm_status = 0) </content>
+            </requirement>
+            <requirement name="ff_procm_57600" type="bltl">
+                <content>(!((proci_status = 2 &amp; number_sensors &lt; 37) | (timeout_counts &gt; 4) | (proco_status = 2 &amp; number_actuators &lt; 27) | (procm_status = 0))) U &lt;= #57600 (procm_status = 0) </content>
+            </requirement>
+            <requirement name="ff_procm_72000" type="bltl">
+                <content>(!((proci_status = 2 &amp; number_sensors &lt; 37) | (timeout_counts &gt; 4) | (proco_status = 2 &amp; number_actuators &lt; 27) | (procm_status = 0))) U &lt;= #72000 (procm_status = 0) </content>
+            </requirement>
+            <requirement name="ff_procm_86400" type="bltl">
+                <content>(!((proci_status = 2 &amp; number_sensors &lt; 37) | (timeout_counts &gt; 4) | (proco_status = 2 &amp; number_actuators &lt; 27) | (procm_status = 0))) U &lt;= #86400 (procm_status = 0) </content>
+            </requirement>
+            <requirement name="down_14400" type="bltl">
+                <content>F &lt;= #14400 ((proci_status = 2 &amp; number_sensors &lt; 37) | (timeout_counts &gt; 4) | (proco_status = 2 &amp; number_actuators &lt; 27) | (procm_status = 0)) </content>
+            </requirement>
+            <requirement name="down_28800" type="bltl">
+                <content>F &lt;= #28800 ((proci_status = 2 &amp; number_sensors &lt; 37) | (timeout_counts &gt; 4) | (proco_status = 2 &amp; number_actuators &lt; 27) | (procm_status = 0)) </content>
+            </requirement>
+            <requirement name="down_43200" type="bltl">
+                <content>F &lt;= #43200 ((proci_status = 2 &amp; number_sensors &lt; 37) | (timeout_counts &gt; 4) | (proco_status = 2 &amp; number_actuators &lt; 27) | (procm_status = 0)) </content>
+            </requirement>
+            <requirement name="down_57600" type="bltl">
+                <content>F &lt;= #57600 ((proci_status = 2 &amp; number_sensors &lt; 37) | (timeout_counts &gt; 4) | (proco_status = 2 &amp; number_actuators &lt; 27) | (procm_status = 0)) </content>
+            </requirement>
+            <requirement name="down_72000" type="bltl">
+                <content>F &lt;= #72000 ((proci_status = 2 &amp; number_sensors &lt; 37) | (timeout_counts &gt; 4) | (proco_status = 2 &amp; number_actuators &lt; 27) | (procm_status = 0)) </content>
+            </requirement>
+            <requirement name="down_86400" type="bltl">
+                <content>F &lt;= #86400 ((proci_status = 2 &amp; number_sensors &lt; 37) | (timeout_counts &gt; 4) | (proco_status = 2 &amp; number_actuators &lt; 27) | (procm_status = 0)) </content>
+            </requirement>
+        </requirements>
+        <resources/>
+    </PlasmaProject>

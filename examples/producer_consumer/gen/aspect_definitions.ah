@@ -1,0 +1,24 @@
+#ifndef ASPECT_DEFINITIONS_AH
+#define ASPECT_DEFINITIONS_AH
+
+#include <systemc>
+#include "monitor.h"
+
+#include <iostream>
+
+aspect Automatic {
+
+
+  // Declare the monitor objects friends, for access to private data
+  pointcut reveal() = "Consumer" || "Producer";
+
+  advice reveal() : slice class {
+    friend class monitor0;
+  }; // class
+
+
+}; // Automatic
+
+
+
+#endif

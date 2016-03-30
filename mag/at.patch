@@ -1,0 +1,91 @@
+--- automaton_tools.h.orig	2010-12-03 13:33:53.000000000 +0100
++++ automaton_tools.h	2010-12-03 14:19:51.000000000 +0100
+@@ -48,15 +48,9 @@
+ 
+ 
+  protected:
+-  spot::ltl::formula* f;
+   spot::bdd_dict* dict; //
+-  spot::tgba* to_free;
+-  spot::tgba* a;
+-  spot::tgba_reduc* reduced;
+-  spot::tgba_tba_proxy* degeneralized;
+-  const spot::tgba_sba_proxy* s;
+-  spot::ltl::parse_error_list pel;
+-  
++  spot::tgba* reduced;
++  spot::tgba_sba_proxy* degeneralized;
+ };
+ 
+ } // namespace mm
+--- automaton_tools.cc.orig	2010-12-03 14:19:03.000000000 +0100
++++ automaton_tools.cc	2010-12-03 14:19:32.000000000 +0100
+@@ -1,4 +1,5 @@
+ #include "automaton_tools.h"
++#include "tgbaalgos/sccfilter.hh"
+ 
+ namespace mm {
+ 
+@@ -102,29 +103,36 @@
+   spot::ltl::environment& env(spot::ltl::default_environment::instance());
+   dict = new spot::bdd_dict();
+   
+-  f = spot::ltl::parse(ltl.c_str(), pel, env, debug_spot);
++  spot::ltl::parse_error_list pel;
++  spot::ltl::formula* f = spot::ltl::parse(ltl.c_str(), pel, env, debug_spot);
+   spot::ltl::format_parse_errors(std::cerr, ltl.c_str(), pel);
+   
+-  to_free = a = spot::ltl_to_tgba_lacim(f, dict);
+-  reduced = new spot::tgba_reduc(a);
+-  reduced->prune_scc();
++  spot::tgba* af = spot::ltl_to_tgba_fm(f, dict);
++  f->destroy();
+   
+-  a = degeneralized = new spot::tgba_sba_proxy(reduced);
+-  a = tgba_dupexp_dfs(a);
++  reduced = spot::scc_filter(af, false);
++  delete af;
+   
+-  s = static_cast<const spot::tgba_sba_proxy*>(degeneralized);
++  degeneralized = new spot::tgba_sba_proxy(reduced);
++
++  // The degeneralized automaton is just a proxy, performing
++  // degeneralization on the fly.  The following line duplicates the
++  // automaton explicitly so we can account for the time it takes to
++  // degeneralize.
++  delete tgba_dupexp_dfs(degeneralized);
+ 
+   display_and_reset_timer("SPOT");
+ 
+ #ifdef AUTOMATON_STATS
+   int sba_states = 0;
+   int sba_transitions = 0;
+-  automaton_tools::count_states_and_trans(s, &sba_states, &sba_transitions);
++  automaton_tools::count_states_and_trans(degeneralized,
++					  &sba_states, &sba_transitions);
+   std::cout << "Number of states in SBA = " << sba_states << std::endl;
+   std::cout << "Number of transitions in SBA = " << sba_transitions << std::endl;
+ #endif
+   
+-  return s;
++  return degeneralized;
+ }
+ 
+ 
+@@ -133,15 +141,8 @@
+ void
+ automaton_tools::cleanup() {
+   
+-  if (f)
+-    spot::ltl::destroy(f);
+-
+-  delete a;
+-
+-
+-//   delete degeneralized;
++  delete degeneralized;
+ //   std::cout << "Deleted the degeneralized " << std::endl;
+-  delete to_free;
+   delete reduced;
+   
+ 

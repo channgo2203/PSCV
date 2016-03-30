@@ -1,0 +1,172 @@
+The implementation of a random scheduler for SystemC
+
+1. Introduction
+
+The scheduler consists of 5 phases: initialization (each process is executed once), 
+evaluation (start a delta-cycle, run all processes that are ready to run once at a 
+time, a process can be made ready an immediate event notification. It is represented 
+by a loop, called L1), update (update all signals and primitive channels), 
+delta-cycle notification (enter the delta notification where notified events trigger 
+their dependent processes), and simulation-cycle notification (if there are no more 
+runnable processes, the kernel advances simulation time to earliest pending timed 
+notification). The first 4 phases are represented by a loop, called L2 and the 
+whole 5 phases are represented by a loop called L3. The simulation is terminated 
+when all processes have terminated or the specified simulation time is passed. 
+
+All methods are stored into two kinds of queues as follows. There are two similar 
+queues for thread processes.
+- method push queue (notification queue) : the set of methods which are notified 
+in the current iteration of the current evaluation phase (the current delta-cycle)  
+- method pop queue (runnable queue) : the set of runnable methods, meaning that 
+they are ready to be executed in the current iteration of the current evaluation 
+phase (the current delta-cycle).  
+
+The source of the process scheduler is the function crunch() which is called by 
+the function simulate() in the file sc_simcontext.cpp. Crunch() calls 
+pop_runnable_method() and  pop_runnable_thread() to get a runnable method process 
+and a runnable thread process to execute, respectively. These functions are 
+defined in the sc_simcontext class.
+
+The interleaving between methods and threads is done as follows. For performance reason, 
+the scheduler first executes all runnable methods, then next the runnable threads are 
+executed.
+
+The pop_runnable_method() and pop_runnable_thread() functions are deterministic in the 
+current implementation of the SystemC scheduler in terms they always take the method and 
+thread which are first added into the queues (pointed by m_methods_pop and m_threads_pop 
+pointers respectively in the functions pop_method() and pop_thread() in the files 
+sc_runnable.h and sc_runnable_int.h).  
+
+2. Randomized scheduler implementation
+
+In the sc_runnable class (files sc_runnable.h and sc_runnable_int.h), we add two 
+functions which randomly choose one of runnable method and threads in the runnable method 
+and thread queues.
+
+inline sc_method_handle pop_method_random();
+inline sc_thread_handle pop_thread_random();
+
+In the pop_runnable_method() and pop_runnable_thread() functions which are called by 
+crunch() function, it checks if a randomized scheduler is used, then it calls 
+pop_method_random() and pop_thread_random() instead of pop_method() and pop_thread() 
+functions.
+
+Implement the seeding functions in the file sc_simcontext.cpp 
+void sc_set_random_seed() and 
+void sc_set_random_seed(unsigned int )
+These functions:
+- Checks that the simulation is functioning
+- Checks that the simulation is already initialized
+- Checks that the simulation phase has not started yet
+- Then they enable a randomized scheduler
+
+The function sc_set_random_seed needs to be called before any sc_start() call.
+
+The compilation is the same as before.
+
+3. An example
+
+3.1 Example 1: The number of possible execution orders is 2
+
+#include <cstdlib>
+#include <time.h>
+#include <iostream>
+
+#include <gsl/gsl_rng.h>
+#include <gsl/gsl_randist.h>
+#include <gsl/gsl_cdf.h>
+
+#include <systemc.h>
+#include <tlm.h>
+#include "sysc/kernel/sc_simcontext.h"
+
+SC_MODULE(top) {
+public:
+  void thread_1();
+  void thread_2();
+
+  SC_CTOR(top) {
+    SC_THREAD(thread_1);
+    SC_THREAD(thread_2);
+  }
+};
+
+void top::thread_1() {
+  std::cout << "thread_1 is executing." << std::endl;
+}
+
+void top::thread_2() {
+  std::cout << "thread_2 is executing." << std::endl;
+}
+
+int sc_main(int argc, char *argv[]) {
+  // top module
+  top top_module("top_module");
+  
+  sc_set_time_resolution(1,SC_NS);
+  
+  // seed the generator
+  unsigned long int seed = time(NULL) * getpid();
+  std::cout << "Provided seed: " << seed << std::endl;
+  // generator type
+  const gsl_rng_type *T = gsl_rng_mt19937;
+  
+  //sc_set_random_seed(); // use default generator and seed
+  sc_set_random_seed(seed);
+  
+  sc_start();
+
+  //sc_set_random_seed(1); // no effect, only shows a warning
+
+  return 0;
+}
+
+Output:
+# ./ex1 
+
+             SystemC 2.3.0-ASI --- Dec 21 2015 16:51:26
+        Copyright (c) 1996-2012 by all Contributors,
+        ALL RIGHTS RESERVED
+
+Provided seed: 125910310122272
+thread_2 is executing.
+thread_1 is executing.
+
+# ./ex1 
+
+             SystemC 2.3.0-ASI --- Dec 21 2015 16:51:26
+        Copyright (c) 1996-2012 by all Contributors,
+        ALL RIGHTS RESERVED
+
+Provided seed: 125911760922381
+thread_1 is executing.
+thread_2 is executing.
+
+3.2 Example 2: The number of execution orders is 216 (see the ex3 in the example folder)
+
+Output:
+Run 216 times, the scheduler coverage is 63%.
+------------------------------------------
+The number of possible execution orders: 216
+------------------------------------------
+The number of runs: 216
+------------------------------------------
+The number of different execution orders: 136
+------------------------------------------
+Scheduler coverage: 63
+------------------------------------------
+Dynamic Random Verification Efficiency: 63
+------------------------------------------
+
+Run until the scheduler covers all 216 execution orders
+------------------------------------------
+The number of possible execution orders: 216
+------------------------------------------
+The number of runs: 1382
+------------------------------------------
+The number of different execution orders: 216
+------------------------------------------
+Scheduler coverage: 100
+------------------------------------------
+Dynamic Random Verification Efficiency: 15.6
+------------------------------------------

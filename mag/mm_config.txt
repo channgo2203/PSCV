@@ -1,0 +1,90 @@
+# Where to output the monitor(s)
+ output_file  ../monitor_multi_modules.cc
+
+
+# The (class) name of the generated monitors
+ mon_name    monitor_multi_modules
+
+
+# Only generate Plasma project file
+# plasma_project_only    false
+
+
+# Plasma project file
+ plasma_file ../test.plasma
+
+
+# Plasma project name
+ plasma_project_name	test
+
+
+# Plasma model name
+ plasma_model_name		test_model
+
+
+# Plasma model content (location of the instrumented executable SystemC program)
+ plasma_model_content	../test
+
+
+# Set to write traces to a file
+ write_to_file     false
+
+ 
+# Declare monitors as friend to adder class
+ usertype module1
+ usertype module2
+
+
+# Module attributes
+# Datatype supported is primitive datatype supported by SystemC
+# sc_bit, sc_bv<n>, sc_logic, sc_lv<n>, sc_int<n> (up to 64), sc_uint<n> (up to 64), sc_bigint<n>, sc_biguint<n>
+#bool, int, usigned int, long, insigned long, signed char, unsigned char, short, unsigned short, enum
+ attribute m1->a m1a
+ attribute m1->b m1b
+ attribute m2->a m2a
+ attribute m2->b m2b
+
+
+# Attribute types
+ att_type sc_int m1a
+ att_type bool m1b
+ att_type sc_logic m2a
+ att_type int m2b
+ 
+ 
+# Event notification
+ eventclock m1->e.notified m1e
+ eventclock m2->ee.notified m2ee
+
+
+# Locations
+ location loc1 "% module1::foo()":entry
+ location loc2 "% module2::foo()":entry
+
+
+# Pattern locations
+ plocation ploc1 ".*a *=.*":after
+ plocation ploc2 ".*b *=.*":after
+
+
+# Define variables values at specific locations - callback values
+ value int ret1 "int module1::foo(...)" :0
+ value int ret2 "int module1::foo(...)" :1
+
+
+# Time resolution
+ time_resolution MON_TIMED_NOTIFY_PHASE_END
+
+# Some example specification formula
+ formula G <= #100 (m1a == 0 U m2a >= 1) @ req_test
+
+
+# Example of how to declare type of non-native variables
+ type module1* m1
+ type module2* m2
+ 
+
+# Includes the file where adder is declared
+ include module1.h
+ include module2.h
+

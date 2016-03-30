@@ -1,0 +1,82 @@
+# Where to output the monitor(s)
+ output_file	/home/channgo/Tools/pscv/examples/producer_consumer/gen/monitor.cc
+
+
+# The (class) name of the generated monitors
+ mon_name    monitor
+
+
+# Plasma project file
+ plasma_file   /home/channgo/Tools/pscv/examples/producer_consumer/gen/producer_consumer.plasma
+
+
+# Plasma project name
+ plasma_project_name   producer_consumer
+
+
+# Plasma model name
+ plasma_model_name   producer_consumer_model
+
+
+# Plasma model content (location of the instrumented executable SystemC program)
+ plasma_model_content	/home/channgo/Tools/pscv/examples/producer_consumer/ins/producer_consumer
+
+
+
+# Set to write traces to a file
+ write_to_file     false
+
+
+# Declare monitors as friend to adder class
+ usertype Consumer
+ usertype Producer
+
+# Example of how to declare type of non-native variables
+ type Consumer* pnt_con
+ type Producer* pnt_pro
+
+# Module attributes
+ attribute pnt_con->c_int c_read
+ attribute pnt_pro->c_int c_write
+
+# Attribute type
+ att_type int c_read
+ att_type int c_write
+ 
+# Event notification
+# eventclock pnt_clk->e_tick.notified tick_notified
+
+# Locations
+# location loc1 "% Producer::producer_foo(...)":entry
+
+# Pattern locations
+
+# Define variables values at specific locations - callback values
+# value bool foor "bool Producer::producer_foo(...)" :0
+# value bool foop "bool Producer::producer_foo(...)" :1
+
+# Time resolution
+ time_resolution MON_TIMED_NOTIFY_PHASE_END
+
+# Sensor failure
+ formula G <= #2000 ((c_read = 38) => (F <= #14 (c_read = 64))) @ latency_14
+ formula G <= #4000 ((c_read = 38) => (F <= #14 (c_read = 64))) @ latency_14
+ formula G <= #6000 ((c_read = 38) => (F <= #14 (c_read = 64))) @ latency_14
+ formula G <= #8000 ((c_read = 38) => (F <= #14 (c_read = 64))) @ latency_14
+ formula G <= #10000 ((c_read = 38) => (F <= #14 (c_read = 64))) @ latency_14
+
+ formula G <= #2000 ((c_read = 38) => (F <= #16 (c_read = 64))) @ latency_16
+ formula G <= #4000 ((c_read = 38) => (F <= #16 (c_read = 64))) @ latency_16
+ formula G <= #6000 ((c_read = 38) => (F <= #16 (c_read = 64))) @ latency_16
+ formula G <= #8000 ((c_read = 38) => (F <= #16 (c_read = 64))) @ latency_16
+ formula G <= #10000 ((c_read = 38) => (F <= #16 (c_read = 64))) @ latency_16
+
+ formula G <= #2000 ((c_read = 38) => (F <= #18 (c_read = 64))) @ latency_18
+ formula G <= #4000 ((c_read = 38) => (F <= #18 (c_read = 64))) @ latency_18
+ formula G <= #6000 ((c_read = 38) => (F <= #18 (c_read = 64))) @ latency_18
+ formula G <= #8000 ((c_read = 38) => (F <= #18 (c_read = 64))) @ latency_18
+ formula G <= #10000 ((c_read = 38) => (F <= #18 (c_read = 64))) @ latency_18
+
+#Includes the file where adder is declared
+ include consumer.h
+ include producer.h
